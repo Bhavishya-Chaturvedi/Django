@@ -3,19 +3,38 @@
 {% block title %}Blog Posts{% endblock %}
 
 {% block content %}
-<h1>Blog Posts</h1>
+<div class="row mb-4">
+    <div class="col">
+        <h1>Blog Posts</h1>
+    </div>
+    <div class="col text-end">
+        <a href="{% url 'posts:post_create' %}" class="btn btn-primary">Create New Post</a>
+    </div>
+</div>
+
 <div class="row">
-    {% for post in posts %}
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <div class="card-body">
-                <h5 class="card-title">{{ post.title }}</h5>
-                <p class="card-text">{{ post.content|truncatewords:30 }}</p>
-                <p class="card-text"><small class="text-muted">By {{ post.author }} on {{ post.created_at|date }}</small></p>
-                <a href="{% url 'posts:post_detail' post.pk %}" class="btn btn-primary">Read More</a>
+    {% if posts %}
+        {% for post in posts %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ post.title }}</h5>
+                    <p class="card-text">{{ post.content|truncatewords:30 }}</p>
+                    <p class="text-muted">By {{ post.author }} on {{ post.created_at|date:"F j, Y" }}</p>
+                </div>
+                <div class="card-footer bg-transparent">
+                    <a href="{% url 'posts:post_detail' post.pk %}" class="btn btn-primary">Read More</a>
+                    {% if user == post.author %}
+                        <a href="{% url 'posts:post_update' post.pk %}" class="btn btn-secondary">Edit</a>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
-    {% endfor %}
+        {% endfor %}
+    {% else %}
+        <div class="col">
+            <p>No posts yet. Be the first to create one!</p>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

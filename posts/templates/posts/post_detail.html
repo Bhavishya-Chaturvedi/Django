@@ -6,9 +6,44 @@
 <div class="card">
     <div class="card-body">
         <h1 class="card-title">{{ post.title }}</h1>
-        <p class="text-muted">By {{ post.author }} on {{ post.created_at|date }}</p>
+        <p class="text-muted">
+            By {{ post.author }} on {{ post.created_at|date:"F j, Y" }}
+            {% if post.updated_at != post.created_at %}
+                (Updated on {{ post.updated_at|date:"F j, Y" }})
+            {% endif %}
+        </p>
         <p class="card-text">{{ post.content }}</p>
+        {% if user == post.author %}
+            <a href="{% url 'posts:post_update' post.pk %}" class="btn btn-primary">Edit</a>
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                Delete
+            </button>
+        {% endif %}
         <a href="{% url 'posts:post_list' %}" class="btn btn-secondary">Back to Posts</a>
     </div>
 </div>
+
+{% if user == post.author %}
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Delete Post</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete "{{ post.title }}"?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form action="{% url 'posts:post_delete' post.pk %}" method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}
