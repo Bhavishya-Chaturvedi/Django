@@ -1,0 +1,22 @@
+{% extends 'posts/base.html' %}
+
+{% block title %}Test Page{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-body">
+        <h2>Test Page</h2>
+        <p>This is a test page to check if templates are working correctly.</p>
+        <p>User is authenticated: <strong>{{ user.is_authenticated }}</strong></p>
+        <p>Username: <strong>{{ user.username }}</strong></p>
+        
+        <h3>Links to test:</h3>
+        <ul>
+            <li><a href="{% url 'posts:post_list' %}">Post List</a></li>
+            <li><a href="{% url 'posts:post_create' %}">Create Post</a></li>
+            <li><a href="{% url 'login' %}">Login</a></li>
+            <li><a href="{% url 'logout' %}">Logout</a></li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

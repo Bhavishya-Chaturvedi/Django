@@ -16,8 +16,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views
+from django.contrib import messages
+
+class CustomerLoginView(auth_views.LoginView):
+    def form_valid(self,form):
+        messages.succes(self.request, f"Welcome back, {form.get_user().username}!")
+        return super().form_valid(form)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('posts.urls')),
+    path('accounts/login/', auth_views.LoginView.as_view(template_name='registration/login.html'),name='login'),
+    path('accounts/logout/',auth_views.LogoutView.as_view(next_page='posts:post_list'),name='logout'),
+   # path('accounts/register/', include('registration.urls')),
 ]

@@ -24,6 +24,7 @@ class PostCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     template_name = 'post/post_form.html'
     success_url = reverse_lazy('posts:post_list')
     succes_message = "Post was created successfully!"
+    login_url = '/accounts/login/'
 
     def form_valid(sefl, form):
         form.instance.author = self.request.user
@@ -43,3 +44,6 @@ class PostDeleteView(LoginRequiredMixin, SuccessMessageMixin, DeleteView):
     success_url = reverse_lazy('posts:post_list')
     success_message = "Post was deleted successfully!"
     
+
+def test_view(request):
+    return render(request,'posts/test.html',{'user': request.user})
